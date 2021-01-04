@@ -1,0 +1,36 @@
+.dropdown-menu_right{
+    right: 0 !important;
+    left: inherit;
+}
+.ach-areas .card{
+    margin-right: 5px;
+}
+.icons-small i{
+    margin-left: 12px;
+    font-size: 19px;
+    color: blueviolet;
+}
+.card{
+    width: 18rem;
+    margin-bottom: 20px;
+}
+.card-link{
+    color: blueviolet;
+    font-weight: bold;
+}
+.completed-area .card-body{
+    background-color: lightgreen;
+}
+.completed-area .area-status{
+    font-weight: 600;
+    color: green;
+}
+.overflow-multiply {
+    width: 15rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#new-area_wrapper{
+    margin-top: 20px;
+}
