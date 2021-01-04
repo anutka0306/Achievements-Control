@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h5 class="card-title"><?=$area['name'];?></h5>
                     <p class="card-text overflow-multiply" title="<?=$area['description'];?>"><?=$area['description'];?></p>
-                    <a href="/dashboard/achievement/<?=$area['id'];?>" class="card-link">See...</a>
+                    <a href="/achievement/area/<?=$area['id'];?>" class="card-link">See...</a>
 
                     <? if($area['status'] == 1):?>
                     <a href="#" class="icons-small" data-toggle="collapse" data-target="#card__edit-area_<?=$area['id'];?>" aria-expanded="false" aria-controls="card__edit-area_<?=$area['id'];?>"><i class="fas fa-edit"></i></a>
