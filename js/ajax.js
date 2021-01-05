@@ -111,7 +111,7 @@ function addAreaAjaxForm(result_form, ajax_form, url) {
                     "                <div class=\"card-body\">\n" +
                     "                    <h5 class=\"card-title\">"+response['data']['name']+"</h5>\n" +
                     "                    <p class=\"card-text\">"+response['data']['description']+"</p>\n" +
-                    "                    <a href=\"/dashboard/achievement/"+response['data']['id']+"\" class=\"card-link\">See...</a>\n" +
+                    "                    <a href=\"/achievement/area/"+response['data']['id']+"\" class=\"card-link\">See...</a>\n" +
                     "\n" +
                     "                    <a href=\"#\" class=\"icons-small\" data-toggle=\"collapse\" data-target=\"#card__edit-area_"+response['data']['id']+"\" aria-expanded=\"false\" aria-controls=\"card__edit-area_"+response['data']['id']+"\"><i class=\"fas fa-edit\"></i></a>\n" +
                     "\n" +

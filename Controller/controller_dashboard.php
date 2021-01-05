@@ -27,13 +27,13 @@ class Controller_Dashboard extends Controller
         $this->view->generate('dashboard_view.php', 'template_view.php', $data, $this->UID);
     }
 
-    public function action_achievement($id){
+    /*public function action_achievement($id){
         if($this->UID == null){
             header('Location: http://'.$_SERVER['HTTP_HOST'].'/');
         }
         $data = $this->model->get_achievement($id);
         $this->view->generate('achievement_view.php', 'template_view.php', $data, $this->UID);
-    }
+    }*/
 
     public function action_create_area(){
         if($this->UID == null){
