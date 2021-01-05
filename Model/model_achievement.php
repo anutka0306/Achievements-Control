@@ -9,7 +9,7 @@ class Model_Achievement extends Model
     }
 
     public function get_achievement($id){
-        return $this->db->getRow("SELECT * FROM `ach_area` JOIN `area_status` ON status_id = ach_area.status WHERE `id` = :id", ['id' =>$id]);
+        return $this->db->getRow("SELECT * FROM `ach_area` JOIN `area_status` ON status_id = ach_area.status WHERE `id` = :id AND `user_id` = :user_id", ['id' =>$id, 'user_id' =>$this->UID]);
     }
 
 }

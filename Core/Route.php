@@ -37,33 +37,31 @@ class Route
 
         if(file_exists($controller_path)){
             include 'Controller/'.$controller_file;
-        }else{
-            //echo 'here1';
-            Route::ErrorPage404();
-        }
+            $controller = new $controller_name;
+            $action = $action_name;
 
-        $controller = new $controller_name;
-        $action = $action_name;
+            if(method_exists($controller, $action)){
+                if(isset($param)){
+                    $controller->$action($param);
+                }else{
+                    $controller->$action();
+                }
 
-        if(method_exists($controller, $action)){
-            //echo 'exists';
-            if(isset($param)){
-                $controller->$action($param);
             }else{
-                $controller->$action();
+                Route::ErrorPage404();
             }
-
         }else{
-            //echo 'here2';
             Route::ErrorPage404();
         }
+
+
     }
 
    public static function ErrorPage404(){
         $host = 'http://'.$_SERVER['HTTP_HOST'].'/';
-        echo $host;
-        //header('HTTP/1.1 404 Not Found');
-       // header('Status: 404 Not Found');
-        //header('Location:'.$host.'404');
+        //echo $host;
+        header('HTTP/1.1 404 Not Found');
+       header('Status: 404 Not Found');
+        header('Location:'.$host.'404');
     }
 }
