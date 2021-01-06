@@ -29,4 +29,13 @@ class Model_Achievement extends Model
         }
     }
 
+    public function delete_action($id){
+
+        $this->db->run("DELETE FROM `ach_actions` WHERE `id`=:id",['id'=>$id]);
+    }
+
+    public function get_area_id_by_action_id($id){
+        return $this->db->getRow("SELECT `ach_area_id` FROM  `ach_actions` WHERE `id`=:id",['id'=>$id]);
+    }
+
 }

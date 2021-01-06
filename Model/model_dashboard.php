@@ -24,7 +24,7 @@ class Model_Dashboard extends Model
     }
 
     public function delete_achievement_area($id){
-        $this->db->run("DELETE FROM `ach_area` WHERE `id` = $id");
+        $this->db->run("DELETE FROM `ach_area` WHERE `id` = :id", ['id'=>$id]);
     }
 
     public function edit_achievement_area($id, $name, $description, $start_date, $user){

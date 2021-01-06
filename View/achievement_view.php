@@ -14,7 +14,10 @@
                 <li class="d-flex justify-content-between ach__actions-list_item"><?=$action['name']?>
                     <div class="d-flex align-items-center">
                         <a class="ach__actions-list_edit"><i class="fas fa-pencil-alt"></i></a>
-                        <a class="ach__actions-list_del"><i class="fas fa-times-circle"></i></a>
+                        <form id="delete_action_form<?=$action['id']?>" action="/achievement/delete_action/<?=$action['id']?>" method="post">
+                            <a href="#"
+                               class="ach__actions-list_del"><i class="fas fa-times-circle"></i></a>
+                        </form>
                     </div>
                 </li>
 
@@ -54,3 +57,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+
+        // Submit form by click by a-element - delete link
+        $(".ach__actions-list_del").on('click', function (e) {
+            e.preventDefault();
+            let formId = $(this).parent().attr('id');
+            $('#'+formId).submit();
+        })
+    })
+</script>

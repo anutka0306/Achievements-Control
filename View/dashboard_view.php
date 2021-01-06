@@ -103,7 +103,6 @@
                 if (await confirm('Вы уверены, что хотите удалить зону?')) {
 
                     delAreaAjax('message-block', '/dashboard/delete_area/' + id, id);
-                    //console.log(id.target.attributes['data-id'].nodeValue);
                 }
                 return false;
             });

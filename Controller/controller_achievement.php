@@ -48,17 +48,44 @@ class Controller_Achievement extends Controller
                 $this->error[] = "Действие с таким именем уже существует в данной зоне.";
             }
         }catch (PDOException $e){
-            $this->error[] = "Ошибка добавления новой зоны";
+            $this->error[] = "Ошибка добавления нового действия";
         }
 
         if(empty($this->error)){
-            header('Location:'.$this->host.'achievement/area/'.$id);
+            $_SESSION['messages'] = $this->message;
         }else{
-            //Подумать, как вывести ошибку
-            echo "ERROR";
+            $_SESSION['errors'] = $this->error;
+        }
+        header('Location:'.$this->host.'achievement/area/'.$id);
+
+
+    }
+
+    public function action_delete_action($id){
+        if($this->UID == null){
+            header('Location:'.$this->host);
         }
 
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $area_id = $this->model->get_area_id_by_action_id($id);
+            $area_id = $area_id['ach_area_id'];
+            try {
+                $this->model->delete_action($id);
+                $this->message[] = "Действие успешно удалено.";
 
+            } catch (PDOException $e) {
+                $this->error[] = "Ошибка удаления действия.";
+            }
+
+            if (empty($this->error)) {
+                $_SESSION['messages'] = $this->message;
+            } else {
+                $_SESSION['errors'] = $this->error;
+            }
+            header('Location:' . $this->host . 'achievement/area/' . $area_id);
+        }else{
+            header('Location:'.$this->host.'404');
+        }
     }
 
 

@@ -59,7 +59,29 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="message-block col-sm-12"></div>
+            <div class="message-block col-sm-12">
+                <?php if($_SESSION['errors']):?>
+                    <?php foreach ($_SESSION['errors'] as $error):?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?=$error;?>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <?php endforeach;?>
+                <?php unset($_SESSION['errors']);?>
+                <?php elseif ($_SESSION['messages']):?>
+                    <?php foreach ($_SESSION['messages'] as $message):?>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <?=$message;?>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <?php endforeach;?>
+                    <?php unset($_SESSION['messages']);?>
+                <?php endif;?>
+            </div>
 
 <?php include 'View/'.$content_view; ?>
 
