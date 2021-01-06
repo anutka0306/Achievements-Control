@@ -9,6 +9,7 @@ class Controller_Dashboard extends Controller
     public $areaName;
     public $areaDescription;
     public $start_date;
+    public $host;
 
     public function __construct()
     {
@@ -16,6 +17,7 @@ class Controller_Dashboard extends Controller
         $this->view = new View();
         $this->db = $this->model->db;
         $this->UID = $_SESSION['login'];
+        $this->host = 'http://'.$_SERVER['HTTP_HOST'].'/';
     }
 
     public function action_index()
@@ -74,25 +76,29 @@ class Controller_Dashboard extends Controller
         if($this->UID == null){
             header('Location: http://'.$_SERVER['HTTP_HOST'].'/');
         }
-        try {
-            $this->model->delete_achievement_area($id);
-            $this->message[] = "Зона успешно удалена";
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            try {
+                $this->model->delete_achievement_area($id);
+                $this->message[] = "Зона успешно удалена";
 
-        }catch (PDOException $e){
-            $this->error[] = "Ошибка удаления зоны";
-        }
-
-        if(empty($this->error)) {
-            foreach ($this->message as $message_item) {
-                $response['message'][] = "<div class='alert alert-primary' role='alert'>" . $message_item . "</div>";
+            } catch (PDOException $e) {
+                $this->error[] = "Ошибка удаления зоны";
             }
-        }else {
-            foreach ($this->error as $error_item) {
-                $response['error'][] = "<div class='alert alert-danger' role='alert'>" . $error_item . "</div>";
-            }
-        }
 
-        echo json_encode($response);
+            if (empty($this->error)) {
+                foreach ($this->message as $message_item) {
+                    $response['message'][] = "<div class='alert alert-primary' role='alert'>" . $message_item . "</div>";
+                }
+            } else {
+                foreach ($this->error as $error_item) {
+                    $response['error'][] = "<div class='alert alert-danger' role='alert'>" . $error_item . "</div>";
+                }
+            }
+
+            echo json_encode($response);
+        }else{
+            header('Location:'.$this->host.'404');
+        }
 
     }
 
@@ -118,6 +124,8 @@ class Controller_Dashboard extends Controller
             }
         }
         echo json_encode($response);
+
+
 
     }
 

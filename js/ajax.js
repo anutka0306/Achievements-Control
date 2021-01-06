@@ -62,7 +62,7 @@ function editAreaAjax(result_form, ajax_form, url) {
 function delAreaAjax(result_form, url, id) {
     $.ajax({
         url: url,
-        method: "GET",
+        method: "POST",
 
         success: function (response) {
             $("."+ result_form).html("");
