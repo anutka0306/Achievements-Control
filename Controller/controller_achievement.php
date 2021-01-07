@@ -88,5 +88,27 @@ class Controller_Achievement extends Controller
         }
     }
 
-
+    public function action_edit_action($id){
+        if($this->UID == null){
+            header('Location:'.$this->host);
+        }
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $area_id = $this->model->get_area_id_by_action_id($id);
+            $area_id = $area_id['ach_area_id'];
+            try {
+                $this->model->edit_action($id, $_POST['actionEditName'], $_POST['actionEditMeasure']);
+                $this->message[] = "Действие успешно отредактировано.";
+            }catch (PDOException $e){
+                $this->error[] = "Ошибка редактирования действия.";
+            }
+            if (empty($this->error)) {
+                $_SESSION['messages'] = $this->message;
+            } else {
+                $_SESSION['errors'] = $this->error;
+            }
+            header('Location:' . $this->host . 'achievement/area/' . $area_id);
+        }else{
+            header('Location:'.$this->host.'404');
+        }
+    }
 }

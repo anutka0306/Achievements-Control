@@ -11,15 +11,48 @@
             <?php if(!empty($data['actions'])):?>
             <ul>
             <?php foreach ($data['actions'] as $action):?>
-                <li class="d-flex justify-content-between ach__actions-list_item"><?=$action['name']?>
+
+                <li class="d-flex justify-content-between ach__actions-list_item">
+                    <p>
+                    <?=$action['name']?>
+                    <small> (<?=$action['measure'];?>)</small>
+                    </p>
                     <div class="d-flex align-items-center">
-                        <a class="ach__actions-list_edit"><i class="fas fa-pencil-alt"></i></a>
-                        <form id="delete_action_form<?=$action['id']?>" class="fff" action="/achievement/delete_action/<?=$action['id']?>" method="post">
+                        <a class="ach__actions-list_edit" data-toggle="collapse" data-target="#collapseEditAction<?=$action['id']?>" aria-expanded="false" aria-controls="collapseEditAction<?=$action['id']?>">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <form id="delete_action_form<?=$action['id']?>" action="/achievement/delete_action/<?=$action['id']?>" method="post">
                             <a href="#"
                                class="ach__actions-list_del"><i class="fas fa-times-circle"></i></a>
                         </form>
                     </div>
                 </li>
+
+                <!-- Hidden edit block -->
+                <form action="/achievement/edit_action/<?=$action['id']?>" method="post" class="form-inline ach__actions_edit-form collapse" id="collapseEditAction<?=$action['id']?>">
+
+                    <div class="form-group mx-sm-2 mb-2">
+                        <input type="text" class="form-control" name="actionEditName" placeholder="<?=$action['name'];?>" value="<?=$action['name'];?>">
+                    </div>
+                    <div class="form-group mx-sm-2 mb-2">
+                        <select class="custom-select" name="actionEditMeasure"  required>
+                            <option value="" disabled>Выберите</option>
+                            <?php foreach ($data['measures'] as $measure):?>
+                                <option value="<?=$measure['id']?>"
+                                    <?php
+                                        if($measure['id'] == $action['mesure_id']){
+                                            echo 'selected';
+                                        }
+                                    ?>
+                                >
+                                    <?=$measure['measure']?>
+                                </option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-info mb-2">Изменить</button>
+                </form>
+                <!-- Hidden edit block end -->
 
             <?php endforeach;?>
             </ul>
@@ -62,11 +95,6 @@
     $(document).ready(function () {
 
         // Submit form by click by a-element - delete link
-       /* $(".ach__actions-list_del").on('click', function (e) {
-            e.preventDefault();
-            let formId = $(this).parent().attr('id');
-            $('#'+formId).submit();
-        });*/
 
         $(".ach__actions-list_del").on('click',
             async (e) =>{

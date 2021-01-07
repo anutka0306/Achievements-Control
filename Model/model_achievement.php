@@ -34,8 +34,13 @@ class Model_Achievement extends Model
         $this->db->run("DELETE FROM `ach_actions` WHERE `id`=:id",['id'=>$id]);
     }
 
+    public function edit_action($id, $name, $measure){
+        $this->db->run("UPDATE `ach_actions` SET name=:name, mesure_id=:measure WHERE id=:id",['name'=>$name, 'measure'=>$measure, 'id'=>$id]);
+    }
+
     public function get_area_id_by_action_id($id){
         return $this->db->getRow("SELECT `ach_area_id` FROM  `ach_actions` WHERE `id`=:id",['id'=>$id]);
     }
+
 
 }
