@@ -1,0 +1,63 @@
+.dropdown-menu_right{
+    right: 0 !important;
+    left: inherit;
+}
+.ach-areas .card{
+    margin-right: 5px;
+}
+.icons-small i{
+    margin-left: 12px;
+    font-size: 19px;
+    color: blueviolet;
+}
+.card{
+    width: 18rem;
+    margin-bottom: 20px;
+}
+.card-link{
+    color: blueviolet;
+    font-weight: bold;
+}
+.completed-area .card-body{
+    background-color: lightgreen;
+}
+.completed-area .area-status{
+    font-weight: 600;
+    color: green;
+}
+.overflow-multiply {
+    width: 15rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#new-area_wrapper{
+    margin-top: 20px;
+}
+/* Achievement Page */
+.ach__main-info{
+    padding: 20px;
+}
+.ach__actions-list{
+    padding: 20px;
+    max-width: 40%;
+}
+.ach__actions-list ul{
+    padding-left: 0px;
+}
+.ach__actions-list_item{
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.ach__actions-list_edit{
+    margin-left: 10px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.ach__actions-list_del{
+    margin-left: 5px;
+    cursor: pointer;
+}
+.ach__actions_edit-form input{
+    width: 150px !important;
+}
