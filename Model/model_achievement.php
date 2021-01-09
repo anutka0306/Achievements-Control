@@ -10,9 +10,16 @@ class Model_Achievement extends Model
 
     public function get_achievement($id){
         $data = [];
+        $chats_in = [];
         $data['info'] =  $this->db->getRow("SELECT * FROM `ach_area` JOIN `area_status` ON status_id = ach_area.status WHERE `id` = :id AND `user_id` = :user_id", ['id' =>$id, 'user_id' =>$this->UID]);
         $data['actions'] = $this->db->getRows("SELECT ach_actions.*, action_measure.measure FROM `ach_actions` JOIN `action_measure` ON action_measure.id = ach_actions.mesure_id WHERE `ach_area_id` = :id",['id' => $id]);
         $data['measures'] = $this->db->getRows("SELECT * FROM `action_measure`");
+
+        foreach ($data['actions'] as $act) {
+            $chats_in[]= $act['id'];
+        }
+        $chats_in = join(',', $chats_in);
+        $data['charts'] = $this->db->getRows("SELECT action_id, `date`, quantity FROM `charts` WHERE action_id IN ($chats_in)");
 
         return $data;
 

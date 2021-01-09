@@ -1,9 +1,18 @@
+
 <div class ="col-sm-12">
     <div class="d-flex justify-content-between">
-        <div class="ach__main-info">
-            <h2><?=$data['info']['name'];?></h2>
-            <small class="ach-description"><?=$data['info']["description"]?></small>
-            <p>Status: <?=$data['info']["status_name"]?></p>
+        <div class="ach__main-area_wrapper">
+            <div class="ach__main-area_info">
+                <h2><?=$data['info']['name'];?></h2>
+                <small class="ach-description"><?=$data['info']["description"]?></small>
+                <p>Status: <?=$data['info']["status_name"]?></p>
+            </div>
+
+            <div class="ach__main-area_charts">
+                <?php foreach ($data['actions'] as $action): ?>
+                <div id="chart_div<?=$action['id']?>"></div>
+                <?php endforeach;?>
+            </div>
         </div>
 
         <div class="ach__actions-list">
@@ -90,7 +99,44 @@
         </div>
     </div>
 </div>
+<?php
+$chart_data = $data['charts'];
+var_dump($data['charts']);
 
+for($i = 0; $i < count($data['actions']); $i++){
+    if($data['actions'][$i]['id'] == 40){
+        echo '40';
+        break;
+    }
+}
+
+$result = array();
+$result1 = array();
+foreach ($chart_data as $key =>$chart){
+
+    $result[$chart['action_id']][] = $chart;
+}
+
+
+foreach ($result as $key=>$value){
+    foreach ($value as $el){
+        $result1[$key][0][] = [$el['date'], (int)$el['quantity']];
+    }
+    for($i = 0; $i < count($data['actions']); $i++){
+        if($data['actions'][$i]['id'] == $key){
+            //echo $key;
+            $result1[$key][] = $data['actions'][$i]['name'];
+            $result1[$key][] = $data['actions'][$i]['measure'];
+            break;
+        }
+    }
+
+}
+
+echo '<pre>';
+var_dump($result1);
+echo '</pre>';
+?>
 <script>
     $(document).ready(function () {
 
@@ -105,6 +151,64 @@
                 }
             }
             );
+
+// Charts
+        var chartData = <?=json_encode($result1)?>;
+        /*var chartDataModified = chartData.map(function (el) {
+            return [new Date(el[0]), el[1]];
+        });*/
+        //console.log(chartData);
+
+        let allChartsData = [];
+        let allChartsId = [];
+        for(let key in chartData){
+            allChartsData[key] = [];
+            allChartsId.push(key);
+            let chartDataModified = chartData[key][0].map(function (el) {
+                return [new Date(el[0]), el[1]];
+            });
+
+            allChartsData[key].push(chartDataModified);
+            allChartsData[key].push(chartData[key][1]);
+            allChartsData[key].push(chartData[key][2]);
+        }
+        console.log(allChartsId);
+        console.log(allChartsData);
+        allChartsData = allChartsData.filter(function(e){return e});
+
+        console.log(allChartsData);
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(drawBackgroundColor);
+
+
+
+
+        function drawBackgroundColor() {
+            console.log(allChartsData);
+            for(let count = 0; count < allChartsData.length; count++) {
+                console.log(allChartsData[count]);
+                console.log(allChartsId[count]);
+                var data = new google.visualization.DataTable();
+                data.addColumn('date', 'X');
+                data.addColumn('number', allChartsData[count][1]);
+               console.log(allChartsData[count]);
+                data.addRows(allChartsData[count][0]);
+
+                var options = {
+                    hAxis: {
+                        title: 'Дни'
+                    },
+                    vAxis: {
+                        title: allChartsData[count][2]
+                    },
+                    backgroundColor: '#f1f8e9'
+                };
+
+                var chart = new google.visualization.LineChart(document.getElementById('chart_div'+allChartsId[count]));
+                chart.draw(data, options);
+            }
+
+        }
 
     })
 </script>
