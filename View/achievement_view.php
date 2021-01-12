@@ -153,11 +153,7 @@ echo '</pre>';
             );
 
 // Charts
-        var chartData = <?=json_encode($result1)?>;
-        /*var chartDataModified = chartData.map(function (el) {
-            return [new Date(el[0]), el[1]];
-        });*/
-        //console.log(chartData);
+        let chartData = <?=json_encode($result1)?>;
 
         let allChartsData = [];
         let allChartsId = [];
@@ -165,18 +161,42 @@ echo '</pre>';
             allChartsData[key] = [];
             allChartsId.push(key);
             let chartDataModified = chartData[key][0].map(function (el) {
-                return [new Date(el[0]), el[1]];
+                let elDate = moment(el[0]).subtract('days', 1);
+                elDate = new Date(elDate);
+                console.log(elDate);
+                //ВОТ ЗДЕСЬ ЧТО-ТО ИДЕТ НЕ ТАК
+                return [elDate, el[1]];
             });
+            console.log(chartDataModified);
 
             allChartsData[key].push(chartDataModified);
             allChartsData[key].push(chartData[key][1]);
             allChartsData[key].push(chartData[key][2]);
+
         }
-        console.log(allChartsId);
-        console.log(allChartsData);
+
         allChartsData = allChartsData.filter(function(e){return e});
 
-        console.log(allChartsData);
+        allChartsData.forEach((item)=>{
+            let cur = item[0][0][0];
+            for(let count = 0; count < item[0].length; count++){
+
+                if(cur < item[0][count][0]){
+                    console.log('----');
+                    console.log(moment(item[0][count][0]).diff(moment(cur), 'days'));
+
+                    let daysCount = moment(item[0][count][0]).diff(moment(cur), 'days');
+
+                    item[0].splice(count,0,[new Date(cur), 0]);
+
+                }
+                cur = item[0][count][0];
+                cur = cur.setDate(cur.getDate() + 1);
+            }
+
+        });
+
+
         google.charts.load('current', {packages: ['corechart', 'line']});
         google.charts.setOnLoadCallback(drawBackgroundColor);
 
@@ -184,14 +204,12 @@ echo '</pre>';
 
 
         function drawBackgroundColor() {
-            console.log(allChartsData);
             for(let count = 0; count < allChartsData.length; count++) {
-                console.log(allChartsData[count]);
-                console.log(allChartsId[count]);
+
                 var data = new google.visualization.DataTable();
                 data.addColumn('date', 'X');
                 data.addColumn('number', allChartsData[count][1]);
-               console.log(allChartsData[count]);
+
                 data.addRows(allChartsData[count][0]);
 
                 var options = {
