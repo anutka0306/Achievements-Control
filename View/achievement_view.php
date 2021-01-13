@@ -9,9 +9,26 @@
             </div>
 
             <div class="ach__main-area_charts">
-                <?php foreach ($data['actions'] as $action): ?>
-                <div id="chart_div<?=$action['id']?>"></div>
-                <?php endforeach;?>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="list-group" id="list-tab" role="tablist">
+                            <?php foreach ($data['actions'] as $action): ?>
+                                <a class="list-group-item list-group-item-action" id="list-<?=$action['id'];?>-list" data-toggle="list" href="#list-<?=$action['id'];?>" role="tab" aria-controls="<?=$action['id'];?>"><?=$action['name'];?></a>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="tab-content" id="nav-tabContent">
+                            <?php foreach ($data['actions'] as $action): ?>
+                            <div class="tab-pane fade" id="list-<?=$action['id'];?>" role="tabpanel" aria-labelledby="list-<?=$action['id'];?>-list">
+                                <div id="chart_div<?=$action['id']?>"></div>
+                            </div>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
