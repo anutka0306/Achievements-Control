@@ -35,8 +35,9 @@
     margin-top: 20px;
 }
 /* Achievement Page */
-.ach__main-info{
+.ach__main-area_wrapper{
     padding: 20px;
+    width: 60%;
 }
 .ach__actions-list{
     padding: 20px;
@@ -60,4 +61,8 @@
 }
 .ach__actions_edit-form input{
     width: 150px !important;
+}
+/*Charts */
+.charts-accordion .card {
+    width: 100% ;
 }

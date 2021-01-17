@@ -1,9 +1,61 @@
+
 <div class ="col-sm-12">
     <div class="d-flex justify-content-between">
-        <div class="ach__main-info">
-            <h2><?=$data['info']['name'];?></h2>
-            <small class="ach-description"><?=$data['info']["description"]?></small>
-            <p>Status: <?=$data['info']["status_name"]?></p>
+        <div class="ach__main-area_wrapper">
+            <div class="ach__main-area_info">
+                <h2><?=$data['info']['name'];?></h2>
+                <small class="ach-description"><?=$data['info']["description"]?></small>
+                <p>Status: <?=$data['info']["status_name"]?></p>
+            </div>
+
+            <!-- Charts Tabs -->
+            <div class="ach__main-area_charts">
+
+           <!--     <div class="row">
+                    <div class="col-3">
+                        <div class="list-group list-group-horizontal" id="list-tab" role="tablist">
+                            <?php foreach ($data['actions'] as $action): ?>
+                                <a class="list-group-item list-group-item-action" id="list-<?=$action['id'];?>-list" data-toggle="list" href="#list-<?=$action['id'];?>" role="tab" aria-controls="<?=$action['id'];?>"><?=$action['name'];?></a>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="tab-content" id="nav-tabContent">
+                            <?php foreach ($data['actions'] as $action): ?>
+                            <div class="tab-pane fade" id="list-<?=$action['id'];?>" role="tabpanel" aria-labelledby="list-<?=$action['id'];?>-list">
+                                <div id="chart_div<?=$action['id']?>"></div>
+                            </div>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="row">
+                    <div class="accordion charts-accordion" id="accordionExample">
+                        <?php foreach ($data['actions'] as $action): ?>
+                            <div class="card">
+                            <div class="card-header" id="heading<?=$action['id'];?>">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse<?=$action['id'];?>" aria-expanded="true" aria-controls="collapse<?=$action['id'];?>">
+                                        <?=$action['name'];?>
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapse<?=$action['id'];?>" class="collapse show" aria-labelledby="heading<?=$action['id'];?>" data-parent="#accordionExample">
+                                <div class="card-body" id="chart_div<?=$action['id']?>">
+
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- Charts Tabs end -->
+
         </div>
 
         <div class="ach__actions-list">
@@ -90,7 +142,36 @@
         </div>
     </div>
 </div>
+<?php
 
+if($data['charts']) {
+    $chart_data = $data['charts'];
+
+    $result = array();
+    $result1 = array();
+    foreach ($chart_data as $key => $chart) {
+
+        $result[$chart['action_id']][] = $chart;
+    }
+
+
+    foreach ($result as $key => $value) {
+        foreach ($value as $el) {
+            $result1[$key][0][] = [$el['date'], (int)$el['quantity']];
+        }
+        for ($i = 0; $i < count($data['actions']); $i++) {
+            if ($data['actions'][$i]['id'] == $key) {
+                //echo $key;
+                $result1[$key][] = $data['actions'][$i]['name'];
+                $result1[$key][] = $data['actions'][$i]['measure'];
+                break;
+            }
+        }
+
+    }
+}
+
+?>
 <script>
     $(document).ready(function () {
 
@@ -105,6 +186,86 @@
                 }
             }
             );
+
+// Charts
+        let chartData = <?=json_encode($result1)?>;
+
+        let allChartsData = [];
+        let allChartsId = [];
+        for(let key in chartData){
+            allChartsData[key] = [];
+            allChartsId.push(key);
+            let chartDataModified = chartData[key][0].map(function (el) {
+                let elDate = moment(el[0]).subtract('days', 1);
+                elDate = new Date(elDate);
+
+                return [elDate, el[1]];
+            });
+
+
+            allChartsData[key].push(chartDataModified);
+            allChartsData[key].push(chartData[key][1]);
+            allChartsData[key].push(chartData[key][2]);
+
+        }
+
+        allChartsData = allChartsData.filter(function(e){return e});
+
+        allChartsData.forEach((item)=>{
+            let cur = item[0][0][0];
+            for(let count = 0; count < item[0].length; count++){
+
+                if(cur < item[0][count][0]){
+
+
+                    let daysCount = moment(item[0][count][0]).diff(moment(cur), 'days');
+
+                    item[0].splice(count,0,[new Date(cur), 0]);
+
+                }
+                cur = item[0][count][0];
+                cur = cur.setDate(cur.getDate() + 1);
+            }
+
+        });
+
+
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(drawBackgroundColor);
+
+
+
+
+        function drawBackgroundColor() {
+            let colors = ["red","green","blue","pink","orange","black","blueviolet","brown"];
+
+            for(let count = 0; count < allChartsData.length; count++) {
+                let randColor = Math.floor(Math.random() * colors.length);
+                let data = new google.visualization.DataTable();
+
+                data.addColumn('date', 'X');
+                data.addColumn('number', allChartsData[count][1]);
+
+                data.addRows(allChartsData[count][0]);
+
+                let options = {
+                    curveType: 'function',
+                    legend: { position: 'top' },
+                    hAxis: {
+                        title: 'Дни',
+                    },
+                    vAxis: {
+                        title: allChartsData[count][2]
+                    },
+                    backgroundColor: '#f1f8e9',
+                    colors: [colors[randColor]],
+                };
+
+                let chart = new google.visualization.LineChart(document.getElementById('chart_div'+allChartsId[count]));
+                chart.draw(data, options);
+            }
+
+        }
 
     })
 </script>
