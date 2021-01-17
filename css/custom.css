@@ -62,3 +62,7 @@
 .ach__actions_edit-form input{
     width: 150px !important;
 }
+/*Charts */
+.charts-accordion .card {
+    width: 100% ;
+}

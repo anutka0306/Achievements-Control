@@ -48,7 +48,7 @@ class Controller_Achievement extends Controller
                 $this->error[] = "Действие с таким именем уже существует в данной зоне.";
             }
         }catch (PDOException $e){
-            $this->error[] = "Ошибка добавления нового действия";
+            $this->error[] = $e;
         }
 
         if(empty($this->error)){
